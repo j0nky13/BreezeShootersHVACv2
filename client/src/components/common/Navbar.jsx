@@ -1,5 +1,6 @@
 import { Phone, Calendar, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -24,9 +25,9 @@ export default function Navbar() {
 
             {/* Center: logo (mathematically centered) */}
             <div className="justify-self-center">
-              <a href="/" className="inline-flex items-center gap-2 select-none">
+              <Link to="/" className="inline-flex items-center gap-2 select-none" onClick={() => setOpen(false)}>
                 <img src="/logo.svg" alt="BreezeShooters logo" className="h-10 w-auto object-contain" />
-              </a>
+              </Link>
             </div>
 
             {/* Right: actions */}
@@ -39,36 +40,38 @@ export default function Navbar() {
                 <Phone className="w-4 h-4" />
                 <span className="font-medium">Call</span>
               </a>
-              <a
-                href="#/schedule"
+              <Link
+                to="/plan"
                 className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white"
+                onClick={() => setOpen(false)}
               >
                 <Calendar className="w-4 h-4" />
                 <span className="font-semibold">Schedule</span>
-              </a>
+              </Link>
             </div>
             {/* Compact action on < md (icon-only to avoid overlap) */}
             <div className="justify-self-end md:hidden flex items-center gap-2">
-              <a
-                href="#/schedule"
+              <Link
+                to="/plan"
                 className="inline-flex items-center justify-center h-9 w-9 rounded-xl bg-sky-600 hover:bg-sky-700 text-white"
                 aria-label="Schedule"
                 title="Schedule"
+                onClick={() => setOpen(false)}
               >
                 <Calendar className="w-4 h-4" />
-              </a>
+              </Link>
             </div>
           </div>
 
           {/* Row 2 (small links) */}
           <div className="border-t border-sky-100">
             <nav className="px-4 sm:px-6 lg:px-8 py-2 text-sm text-slate-700 hidden md:flex gap-6 justify-center">
-              <a href="/" className="hover:text-sky-700">Home</a>
-              <a href="/services" className="hover:text-sky-700">Services</a>
-              <a href="/plan" className="hover:text-sky-700">EZ‑Breezy Plan</a>
-              <a href="#/financing" className="hover:text-sky-700">Financing</a>
-              <a href="#/about" className="hover:text-sky-700">About</a>
-              <a href="/contact" className="hover:text-sky-700">Contact</a>
+              <Link to="/" className="hover:text-sky-700">Home</Link>
+              <Link to="/services" className="hover:text-sky-700">Services</Link>
+              <Link to="/plan" className="hover:text-sky-700">EZ‑Breezy Plan</Link>
+              <Link to="/financing" className="hover:text-sky-700">Financing</Link>
+              <Link to="/about" className="hover:text-sky-700">About</Link>
+              <Link to="/contact" className="hover:text-sky-700">Contact</Link>
             </nav>
           </div>
 
@@ -84,31 +87,32 @@ export default function Navbar() {
                   <Phone className="w-4 h-4" />
                   <span className="font-medium">Call</span>
                 </a>
-                <a
-                  href="#/schedule"
+                <Link
+                  to="/plan"
                   className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700 hover:-translate-y-[2px] transition-all duration-200 ease-in-out"
+                  onClick={() => setOpen(false)}
                 >
                   <Calendar className="w-4 h-4" />
                   <span className="font-semibold">Schedule</span>
-                </a>
+                </Link>
               </div>
               <nav className="px-4 py-3 grid gap-3">
                 {[
                   ["Home", "/"],
                   ["Services", "/services"],
-                  ["Comfort Plan", "/plan"],
+                  ["EZ‑Breezy Plan", "/plan"],
                   ["Financing", "/financing"],
                   ["About", "/about"],
                   ["Contact", "/contact"],
-                ].map(([label, href]) => (
-                  <a
+                ].map(([label, to]) => (
+                  <Link
                     key={label}
-                    href={`#${href}`}
+                    to={to}
                     onClick={() => setOpen(false)}
                     className="px-3 py-2 rounded-lg hover:bg-sky-50"
                   >
                     {label}
-                  </a>
+                  </Link>
                 ))}
               </nav>
             </div>

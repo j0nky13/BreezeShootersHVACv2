@@ -42,7 +42,10 @@ export default function ThermostatInfo() {
             </ul>
 
             <div className="mt-6">
-              <a href="#/membership" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold shadow">
+              <a
+                href="/plan"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#2196F3] hover:bg-[#1C7ED6] text-white font-semibold shadow"
+              >
                 Join the plan <ArrowRight className="h-4 w-4" />
               </a>
             </div>

@@ -1,5 +1,6 @@
 import { Wrench, ThermometerSun, Leaf, Droplets } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const services = [
   {
@@ -73,6 +74,14 @@ export default function ServicesGrid() {
               <p className="text-slate-600 leading-relaxed text-sm">{s.desc}</p>
             </motion.article>
           ))}
+        </div>
+        <div className="mt-12 text-center">
+          <Link
+            to="/services"
+            className="inline-block px-6 py-3 rounded-full bg-sky-500 text-white font-semibold hover:bg-sky-600 transition-transform hover:-translate-y-1 shadow-md"
+          >
+            View All Services
+          </Link>
         </div>
       </div>
     </section>

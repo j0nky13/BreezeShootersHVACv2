@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 /**
  * Thermostat.jsx
@@ -18,6 +18,53 @@ export default function Thermostat({
 }) {
   const clamp = (v) => Math.min(max, Math.max(min, v));
   const [temp, setTemp] = useState(() => clamp(initialTemp));
+
+  // Pointer/touch dragging state
+  const trackRef = useRef(null);            // default (large) slider track wrapper
+  const compactTrackRef = useRef(null);     // compact slider track wrapper
+  const activeTrackRef = useRef(null);      // which track is currently being dragged
+  const draggingRef = useRef(false);
+
+  function setTempFromClientX(clientX, refEl) {
+    const el = refEl?.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+    const pct = rect.width > 0 ? x / rect.width : 0;
+    const next = Math.round(min + pct * (max - min));
+    setTemp(clamp(next));
+  }
+
+  function startDrag(e, refEl) {
+    // Prevent scrolling while adjusting on touch
+    if (e.cancelable) e.preventDefault();
+    draggingRef.current = true;
+    activeTrackRef.current = refEl;
+    const clientX = e.touches ? e.touches[0].clientX : (e.clientX ?? 0);
+    setTempFromClientX(clientX, refEl);
+  }
+
+  useEffect(() => {
+    function onMove(e) {
+      if (!draggingRef.current || !activeTrackRef.current) return;
+      const clientX = e.touches ? e.touches[0].clientX : (e.clientX ?? 0);
+      setTempFromClientX(clientX, activeTrackRef.current);
+    }
+    function onUp() {
+      draggingRef.current = false;
+      activeTrackRef.current = null;
+    }
+    window.addEventListener("pointermove", onMove, { passive: false });
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("touchmove", onMove, { passive: false });
+    window.addEventListener("touchend", onUp);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("touchend", onUp);
+    };
+  }, [min, max]);
 
   useEffect(() => {
     if (typeof onChange === "function") onChange(temp);
@@ -107,7 +154,12 @@ export default function Thermostat({
           </div>
 
           {/* Slider */}
-          <div className="relative z-10 mt-4 h-6 sm:h-7">
+          <div
+            ref={compactTrackRef}
+            onPointerDown={(e) => startDrag(e, compactTrackRef)}
+            onTouchStart={(e) => startDrag(e, compactTrackRef)}
+            className="relative z-10 mt-4 h-6 sm:h-7 touch-none select-none"
+          >
             <label htmlFor="thermostat" className="sr-only">Temperature</label>
             <input
               id="thermostat"
@@ -117,7 +169,7 @@ export default function Thermostat({
               step={1}
               value={temp}
               onChange={(e) => setTemp(clamp(parseInt(e.target.value, 10)))}
-              className="absolute inset-0 z-20 w-full cursor-ew-resize appearance-none opacity-0"
+              className="absolute inset-0 z-20 w-full cursor-ew-resize appearance-none opacity-0 touch-none"
             />
             <div className="absolute left-0 right-0 top-1/2 z-0 h-2 -translate-y-1/2 rounded-full bg-gradient-to-r from-[#08AFFF] via-[#a5e1ff] to-[#FF7A00]/80" />
             <div className="absolute left-0 top-1/2 z-10 h-2 -translate-y-1/2 rounded-full bg-white/70 shadow-inner" style={{ width: `${percent}%` }} />
@@ -159,7 +211,12 @@ export default function Thermostat({
         </div>
 
         {/* Slider */}
-        <div className="relative z-10 mt-5 h-7 sm:h-8">
+        <div
+          ref={trackRef}
+          onPointerDown={(e) => startDrag(e, trackRef)}
+          onTouchStart={(e) => startDrag(e, trackRef)}
+          className="relative z-10 mt-5 h-7 sm:h-8 touch-none select-none"
+        >
           <label htmlFor="thermostat" className="sr-only">Temperature</label>
           <input
             id="thermostat"
@@ -169,7 +226,7 @@ export default function Thermostat({
             step={1}
             value={temp}
             onChange={(e) => setTemp(clamp(parseInt(e.target.value, 10)))}
-            className="absolute inset-0 z-20 w-full cursor-ew-resize appearance-none opacity-0"
+            className="absolute inset-0 z-20 w-full cursor-ew-resize appearance-none opacity-0 touch-none"
           />
           <div className="absolute left-0 right-0 top-1/2 z-0 h-2 sm:h-3 -translate-y-1/2 rounded-full bg-gradient-to-r from-[#08AFFF] via-[#a5e1ff] to-[#FF7A00]/80" />
           <div className="absolute left-0 top-1/2 z-10 h-2 sm:h-3 -translate-y-1/2 rounded-full bg-white/70 shadow-inner" style={{ width: `${percent}%` }} />
@@ -181,7 +238,10 @@ export default function Thermostat({
           <div className="w-32 sm:w-40">
             <ScoreBar percent={scoreFromTemp(temp, min, max)} />
           </div>
-          <a href="/plan" className="ml-auto inline-flex items-center gap-2 rounded-full bg-[#08AFFF] px-4 py-2 text-sm font-semibold text-[#00324A] shadow-sm hover:brightness-95">
+          <a
+            href="/plan"
+            className="ml-auto inline-flex items-center gap-2 rounded-full bg-[#2196F3] hover:bg-[#1C7ED6] px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors"
+          >
             Make it EZ‑Breezy <span aria-hidden>→</span>
           </a>
         </div>
