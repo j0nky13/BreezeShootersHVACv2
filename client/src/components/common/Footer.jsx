@@ -21,39 +21,54 @@ export default function Footer() {
                   className="h-8 w-auto object-contain"
                 />
               </div>
-              <p className="mtmau-3 text-sm text-slate-600">
-                Licensed &bull; Insured &bull; Newberry, SC
+              <p className="mt-3 text-sm text-slate-600">
+                Licensed • Insured • Newberry, SC
               </p>
             </div>
+
             <div>
               <h4 className="font-semibold text-slate-900">Services</h4>
               <ul className="mt-2 space-y-1 text-sm text-slate-600">
-                <li>AC Repair &amp; Install</li>
-                <li>Heating Repair</li>
-                <li>Maintenance Plans</li>
-                <li>Indoor Air Quality</li>
+                <li><a href="/services#ac-repair" className="hover:text-sky-700">AC Repair & Install</a></li>
+                <li><a href="/services#heating" className="hover:text-sky-700">Heating Repair</a></li>
+                <li><a href="/plan" className="hover:text-sky-700">EZ-Breezy Plan</a></li>
+                <li><a href="/services#air-quality" className="hover:text-sky-700">Indoor Air Quality</a></li>
               </ul>
             </div>
+
             <div>
               <h4 className="font-semibold text-slate-900">Company</h4>
               <ul className="mt-2 space-y-1 text-sm text-slate-600">
-                <li>About</li>
-                <li>Careers</li>
-                <li>Financing</li>
-                <li>Contact</li>
+                <li><a href="/about" className="hover:text-sky-700">About</a></li>
+                <li><a href="/careers" className="hover:text-sky-700">Careers</a></li>
+                <li><a href="/financing" className="hover:text-sky-700">Financing</a></li>
+                <li><a href="/contact" className="hover:text-sky-700">Contact</a></li>
               </ul>
             </div>
+
             <div>
               <h4 className="font-semibold text-slate-900">Get help</h4>
               <p className="mt-2 text-sm text-slate-600">
-                (843) 555-1234<br />support@breezeshooters.com
+                <a href="tel:+18435551234" className="hover:text-sky-700 block">(843) 555-1234</a>
+                <span className="block mt-1">Mon–Fri: 8:00 AM – 6:00 PM</span>
+                <span className="block">Sat: 9:00 AM – 3:00 PM</span>
+                <span className="block mt-1 font-medium text-sky-700">24/7 Emergency Service Available</span>
               </p>
             </div>
           </div>
+
           <div className="border-t border-sky-100 py-4 text-center text-xs text-slate-500 space-y-1">
             <div>&copy; {year} BreezeShooters HVAC</div>
             <div>
-              Powered by <a href="https://marsh.monster" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-700 font-medium">Marsh Monster</a>
+              Powered by{" "}
+              <a
+                href="https://marsh.monster"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-600 hover:text-green-700 font-medium"
+              >
+                Marsh Monster
+              </a>
             </div>
           </div>
         </div>
