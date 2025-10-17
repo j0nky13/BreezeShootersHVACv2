@@ -1,15 +1,46 @@
 import { Phone, Calendar, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { createPortal } from "react-dom";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
+  const anchorRef = useRef(null);
+  const [panelStyle, setPanelStyle] = useState(null);
+
+  function computePanelStyle() {
+    const el = anchorRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    // Match previous: absolute left-4 right-4 inside the card, with mt-2 below it
+    const inset = 16; // Tailwind left-4/right-4
+    const topOffset = 8; // mt-2
+    setPanelStyle({
+      position: "fixed",
+      top: Math.round(r.bottom + topOffset) + "px",
+      left: Math.round(r.left + inset) + "px",
+      width: Math.max(0, Math.round(r.width - inset * 2)) + "px",
+    });
+  }
+
+  useEffect(() => {
+    if (!open) return;
+    computePanelStyle();
+    const onWin = () => computePanelStyle();
+    window.addEventListener("resize", onWin);
+    window.addEventListener("scroll", onWin, { passive: true });
+    return () => {
+      window.removeEventListener("resize", onWin);
+      window.removeEventListener("scroll", onWin);
+    };
+  }, [open]);
+
   return (
     <header className="sticky top-4 z-50 bg-transparent">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-5 lg:px-6">
         {/* Floating card wrapper */}
-        <div className="relative rounded-3xl border border-sky-100 bg-white/90 backdrop-blur shadow-lg shadow-sky-100/60 overflow-visible hover:shadow-sky-200/80 hover:-translate-y-[1px] transition-all duration-300 ease-in-out">
+        <div ref={anchorRef} className="relative rounded-3xl border border-sky-100 bg-white/90 backdrop-blur shadow-lg shadow-sky-100/60 overflow-visible hover:shadow-sky-200/80 hover:-translate-y-[1px] transition-all duration-300 ease-in-out">
           {/* Row 1 */}
           <div className="px-4 sm:px-6 lg:px-8 py-3 grid grid-cols-[1fr_auto_1fr] items-center">
             {/* Left: mobile menu */}
@@ -76,47 +107,57 @@ export default function Navbar() {
           </div>
 
           {/* Mobile flyout (anchored to this card) */}
-          {open && (
-            <div className="md:hidden absolute left-4 right-4 top-full mt-2 rounded-2xl border border-sky-100 bg-white shadow-xl overflow-hidden z-20">
-              {/* Quick actions */}
-              <div className="flex items-center gap-2 p-3 border-b border-sky-100">
-                <a
-                  href="tel:+18435551234"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-sky-200 bg-white hover:bg-sky-50 hover:-translate-y-[2px] transition-all duration-200 ease-in-out"
+          {open &&
+            createPortal(
+              <div className="fixed inset-0 z-[60]" onClick={() => setOpen(false)}>
+                <div
+                  style={panelStyle || undefined}
+                  className="fixed rounded-2xl border border-sky-100 bg-white shadow-xl overflow-hidden z-[70]"
+                  onClick={(e) => e.stopPropagation()}
+                  role="dialog"
+                  aria-modal="true"
                 >
-                  <Phone className="w-4 h-4" />
-                  <span className="font-medium">Call</span>
-                </a>
-                <Link
-                  to="/plan"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700 hover:-translate-y-[2px] transition-all duration-200 ease-in-out"
-                  onClick={() => setOpen(false)}
-                >
-                  <Calendar className="w-4 h-4" />
-                  <span className="font-semibold">Schedule</span>
-                </Link>
-              </div>
-              <nav className="px-4 py-3 grid gap-3">
-                {[
-                  ["Home", "/"],
-                  ["Services", "/services"],
-                  ["EZ‑Breezy Plan", "/plan"],
-                  ["Financing", "/financing"],
-                  ["About", "/about"],
-                  ["Contact", "/contact"],
-                ].map(([label, to]) => (
-                  <Link
-                    key={label}
-                    to={to}
-                    onClick={() => setOpen(false)}
-                    className="px-3 py-2 rounded-lg hover:bg-sky-50"
-                  >
-                    {label}
-                  </Link>
-                ))}
-              </nav>
-            </div>
-          )}
+                  {/* Quick actions */}
+                  <div className="flex items-center gap-2 p-3 border-b border-sky-100">
+                    <a
+                      href="tel:+18435551234"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl border border-sky-200 bg-white hover:bg-sky-50 hover:-translate-y-[2px] transition-all duration-200 ease-in-out"
+                    >
+                      <Phone className="w-4 h-4" />
+                      <span className="font-medium">Call</span>
+                    </a>
+                    <Link
+                      to="/plan"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-sky-600 text-white hover:bg-sky-700 hover:-translate-y-[2px] transition-all duration-200 ease-in-out"
+                      onClick={() => setOpen(false)}
+                    >
+                      <Calendar className="w-4 h-4" />
+                      <span className="font-semibold">Schedule</span>
+                    </Link>
+                  </div>
+                  <nav className="px-4 py-3 grid gap-3">
+                    {[
+                      ["Home", "/"],
+                      ["Services", "/services"],
+                      ["EZ‑Breezy Plan", "/plan"],
+                      ["Financing", "/financing"],
+                      ["About", "/about"],
+                      ["Contact", "/contact"],
+                    ].map(([label, to]) => (
+                      <Link
+                        key={label}
+                        to={to}
+                        onClick={() => setOpen(false)}
+                        className="px-3 py-2 rounded-lg hover:bg-sky-50"
+                      >
+                        {label}
+                      </Link>
+                    ))}
+                  </nav>
+                </div>
+              </div>,
+              document.body
+            )}
         </div>
       </div>
     </header>
