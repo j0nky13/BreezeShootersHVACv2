@@ -43,11 +43,11 @@ export default function HeroSection() {
           className="max-w-3xl w-full text-center bg-white/85 backdrop-blur-xl border border-sky-100 shadow-2xl rounded-3xl px-8 py-10"
         >
           <h1 className="text-5xl sm:text-6xl font-black text-slate-900 leading-tight">
-            Feel the Fix.
-            <span className="block text-sky-700">Not the Fuss.</span>
+            Cool Comfort.
+            <span className="block text-sky-500">Hot Service.</span>
           </h1>
           <p className="mt-4 text-lg text-slate-600">
-            Comfort so effortless it feels like the air itself is helping.
+            Expert HVAC care that keeps your home chill when it’s hot—and cozy when it’s not.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -60,7 +60,7 @@ export default function HeroSection() {
             </a>
             <a
               href="#/schedule"
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold shadow-md"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#2196F3] hover:bg-[#1C7ED6] text-white font-semibold shadow-md transition-colors"
             >
               <Calendar className="w-5 h-5" />
               <span>Schedule Visit</span>
