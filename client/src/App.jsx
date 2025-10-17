@@ -3,6 +3,9 @@ import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import Home from "./pages/Home";
 import Plan from "./pages/Plan";
+import Contact from "./pages/Contact"
+import Services from "./pages/Services"
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   return (
@@ -12,6 +15,9 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/plan" element={<Plan />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </div>
